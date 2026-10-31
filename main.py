@@ -46,21 +46,21 @@ for empresa in empresas_alvo:
     
     try:
         resposta = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=7)
-        response_headers = resposta.headers
+        responses_headers = resposta.headers
         
         # Identificação de melhorias de Infraestrutura e Conformidade
         melhorias_necessarias = []
         
-        if "Content-Security-Policy" not in response_headers:
+        if "Content-Security-Policy" not in responses_headers:
             melhorias_necessarias.append("Content-Security-Policy (CSP)")
             
-        if "X-Frame-Options" not in response_headers:
+        if "X-Frame-Options" not in responses_headers:
             melhorias_necessarias.append("X-Frame-Options (Proteção de Interface)")
             
-        if "X-Content-Type-Options" not in response_headers:
+        if "X-Content-Type-Options" not in responses_headers:
             melhorias_necessarias.append("X-Content-Type-Options (MIME Guard)")
             
-        if "Strict-Transport-Security" not in response_headers:
+        if "Strict-Transport-Security" not in responses_headers:
             melhorias_necessarias.append("Strict-Transport-Security (HSTS)")
 
         if json_ajuste := melhorias_necessarias:
