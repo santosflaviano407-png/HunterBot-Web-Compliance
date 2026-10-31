@@ -28,4 +28,4 @@ jobs:
       env:
           TOKEN_TELEGRAM: ${{ secrets.TOKEN_TELEGRAM }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: python teste_ia.py
+      run: python main.py
