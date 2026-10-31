@@ -3,7 +3,7 @@ import requests
 import time
 
 key = os.environ.get("GEMINI_API_KEY")
-base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
+base_url = "https://generativelanguage.googleapis.com/v1/models/gemini-3.8-flash:generateContent"
 url = f"{base_url}?key={key}"
 
 payload = {
