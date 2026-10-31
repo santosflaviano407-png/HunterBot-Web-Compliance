@@ -30,7 +30,8 @@ def pedir_analise_ia(empresa, falha):
     try:
         resposta = requests.post(url_gemini, json=payload, timeout=10)
         dados = resposta.json()
-        texto_ia = dados['candidates'][0]['content']['parts'][0]['text']
+        texto_ia = dados['candidates']['content']['parts']['text']
+
         return texto_ia
     except Exception as e:
         return f"Aviso: IA em manutenção. Detalhe técnico: {e}"
