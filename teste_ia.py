@@ -12,11 +12,11 @@ payload = {
 
 # Configurações de retentativa
 max_tentativas = 3
-tempo_espera = 5  # Segundos de espera entre as tentativas
+tempo_espera = 15  # Segundos de espera entre as tentativas
 
 for tentativa in range(max_tentativas):
     try:
-        resposta = requests.post(url, json=payload, timeout=10)
+        resposta = requests.post(url, json=payload, timeout=30)
         
         # Se o servidor responder com 503 (Unavailable), força a queda no bloco 'except' para tentar de novo
         if resposta.status_code == 503:
