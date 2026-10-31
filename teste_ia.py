@@ -12,6 +12,6 @@ payload = {
 try:
     resposta = requests.post(url, json=payload, timeout=10)
     dados = resposta.json()
-            print("RESPOSTA COMPLETA DA IA:", dados)
+    print("RESPOSTA COMPLETA DA IA:", dados)
 except Exception as e:
     print("ERRO:", e)
