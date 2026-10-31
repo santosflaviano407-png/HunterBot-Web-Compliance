@@ -61,17 +61,12 @@ for empresa in empresas_alvo:
             
         if mejorias_necessarias:
             print(f" -> [INFO] {empresa} aceita {len(mejorias_necessarias)} otimizações! Consultando Gemini...")
-            for item in mejorias_necessarias:
+            for item in melhorias_necessarias:
                 analise_da_ia = pedir_analise_ia(empresa, item)
                 
-                # Monta a mensagem formatada para o Telegram
-                mensagem_final = (
-                    f"🧠 *CONSULTORIA DE IA: HUNTERBOT & GEMINI*\n\n"
-                    f"⚠️ *Alvo:* {empresa}\n"
-                    f"❌ *Otimização:* {item}\n\n"
-                    f"🛡️ *Parecer Técnico da IA:*\n{analise_da_ia}"
-                )
-                
+                # Monta a mensagem formatada de forma correta e sem erros de aspas
+                               mensagem_final = f"🧠 *CONSULTORIA DE IA: HUNTERBOT & GEMINI*\n\n⚠️ *Alvo:* {empresa}\n❌ *Otimização:* {item}\n\n🛡️ *Parecer Técnico da IA:*\n{analise_da_ia}"
+
                 # Envia o parecer de cada falha direto para o seu celular
                 requests.post(url_telegram, data={"chat_id": CHAT_ID_TELEGRAM, "text": mensagem_final, "parse_mode": "Markdown"}, timeout=5)
                 time.sleep(1)
