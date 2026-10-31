@@ -17,7 +17,7 @@ url_telegram = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage"
 
 def pedir_analise_ia(empresa, falha):
     """Conecta o robô à API do Gemini para gerar pareceres técnicos de cibersegurança"""
-    url_gemini = f"https://generativelanguage.googleapis.comv1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+    url_gemini = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     
     prompt = (
         f"Você é um especialista em cibersegurança sênior. O meu scanner detectou que o site '{empresa}' "
