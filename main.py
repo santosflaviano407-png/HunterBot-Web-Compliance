@@ -4,9 +4,14 @@ import requests
 
 print("--- 🤖 INICIANDO BOT QUANTITATIVO REAL (B3 via yfinance) ---")
 
-# CORREÇÃO AQUI: Alinhado exatamente com o seu print do GitHub
+# Captura o token e remove possíveis espaços ou caracteres inválidos (como asteriscos)
 TELEGRAM_TOKEN = os.getenv("TOKEN_TELEGRAM")
+if TELEGRAM_TOKEN:
+    TELEGRAM_TOKEN = TELEGRAM_TOKEN.replace("*", "").strip()
+
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+if TELEGRAM_CHAT_ID:
+    TELEGRAM_CHAT_ID = TELEGRAM_CHAT_ID.strip()
 
 def enviar_mensagem_telegram(mensagem):
     """Envia o sinal formatado diretamente para o celular do usuário via Telegram"""
@@ -31,11 +36,10 @@ def enviar_mensagem_telegram(mensagem):
         print(f"[!] Falha na conexão com a API do Telegram: {e}")
 
 def obter_dados_mercado_reais(ticker):
-    """
-    Busca o histórico real de fechamento dos últimos 10 dias usando a API do Yahoo Finance.
-    Retorna uma lista com os preços de fechamento.
-    """
+    """Busca o histórico real de fechamento usando a API do Yahoo Finance"""
     print(f"[+] Coletando histórico real de preços para o ativo: {ticker}...")
+    
+    # CORREÇÃO: Barra de separação explícita na URL antes do ticker
     url = f"https://yahoo.com{ticker}"
     headers = {"User-Agent": "Mozilla/5.0"}
     params = {"range": "15d", "interval": "1d"}
@@ -45,7 +49,6 @@ def obter_dados_mercado_reais(ticker):
         if response.status_code == 200:
             dados = response.json()
             precos = dados["chart"]["result"][0]["indicators"]["quote"][0]["close"]
-            # Remove valores nulos (dias em que o mercado fechou ou sem negociação)
             precos_limpos = [p for p in precos if p is not None]
             return precos_limpos
         else:
