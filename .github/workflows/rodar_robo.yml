@@ -1,25 +1,35 @@
 name: Executar Robo Quantitativo Preditivo
 
 on:
-  workflow_dispatch: # Permite que você clique e execute manualmente na aba Actions
+  workflow_dispatch: # Mantém o botão para rodar manualmente quando quiser
+  schedule:
+    # 21:15 UTC = 18:15 Horário de Brasília (UTC-3)
+    # Executa de segunda a sexta-feira
+    - cron: '15 21 * * 1-5'
 
 jobs:
   executar-bot:
     runs-on: ubuntu-latest
-    steps:
-      - name: Baixar Código do Repositório
-        uses: actions/checkout@v3
 
+    steps:
+      # Atualizado para v4 (mais rápido e seguro)
+      - name: Baixar Código do Repositório
+        uses: actions/checkout@v4
+
+      # Atualizado para v5 (melhor suporte a cache e versões de Python)
       - name: Configurar o Ambiente Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip' # Opcional: acelera o workflow nas próximas execuções
 
+      # Instalação das dependências
       - name: Instalar Dependências Necessárias
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
+      # Execução do script com os Secrets do GitHub
       - name: Executar o Bot Financeiro com Variáveis de Ambiente
         env:
           TOKEN_TELEGRAM: ${{ secrets.TOKEN_TELEGRAM }}
