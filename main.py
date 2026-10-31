@@ -33,7 +33,7 @@ def pedir_analise_ia(empresa, falha):
         dados = resposta.json()
         
         # Estrutura exata da árvore JSON da API do Gemini para capturar o texto puro
-                        texto_ia = dados['candidates'][0]['content']['parts'][0]['text']
+        texto_ia = dados['candidates'][0]['content']['parts'][0]['text']
 
         return texto_ia
     except Exception as e:
