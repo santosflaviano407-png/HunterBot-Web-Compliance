@@ -1,76 +1,59 @@
-import os
-import random
 import time
+import os
 import requests
 
-# --- CONFIGURAÇÃO DE CREDENCIAIS PROTEGIDAS DA NUVEM ---
-TOKEN_TELEGRAM = os.environ.get('TOKEN_TELEGRAM')
-CHAT_ID_TELEGRAM = os.environ.get('CHAT_ID_TELEGRAM', '7726228493')
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+print("--- 🤖 INICIANDO BOT QUANTITATIVO DE ANÁLISE PREDITIVA ---")
 
-# ESCOPO DE AUDITORIA: Portais de Teste Comerciais
-empresas_alvo = ["uol.com.br", "terra.com.br", "globo.com"]
-
-print("--- 🤖 INICIANDO HUNTERBOT PRO COM INTELIGÊNCIA ARTIFICIAL ---")
-
-# URL Oficial da API de Bots do Telegram
-url_telegram = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage"
-
-def pedir_analise_ia(empresa, elemento_ti):
-    """Conecta o robô à API do Gemini focado em boas práticas de infraestrutura de TI"""
-    url_gemini = f"https://googleapis.com{GEMINI_API_KEY}"
+def obter_dados_mercado(ticker):
+    """
+    Simula e calcula dados de mercado para análise técnica.
+    Em ambiente local, você pode usar a biblioteca 'yfinance' para puxar dados reais.
+    """
+    print(f"[+] Coletando histórico de preços para o ativo: {ticker}...")
     
-    prompt = (
-        f"Atue como um analista sênior de infraestrutura web. O site '{empresa}' "
-        f"pode implementar melhorias ativando o parâmetro de cabeçalho '{elemento_ti}'. "
-        f"Explique de forma muito curta (máximo 3 linhas) o benefício técnico desse parâmetro "
-        f"para a proteção dos dados dos clientes e como o administrador configura no Nginx."
-    )
+    # Preços históricos fictícios simulando uma tendência estruturada para o teste
+    precos_fechamento = [100.0, 101.5, 100.8, 102.3, 103.1, 102.9, 104.2, 105.0, 104.8, 106.1]
+    return precos_fechamento
+
+def calcular_indicadores(precos):
+    """Calcula médias móveis e momentum estatístico dos preços"""
+    if len(precos) < 3:
+        return 0.0, 0.0
     
-    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    # Média curta dos últimos 3 dias
+    media_curta = sum(precos[-3:]) / 3
+    # Média longa dos últimos 5 dias
+    media_longa = sum(precos[-5:]) / 5
     
-    try:
-        resposta = requests.post(url_gemini, json=payload, timeout=10)
-        dados = resposta.json()
+    return media_curta, media_longa
+
+def executar_estrategia(ticker):
+    """Aplica a lógica quantitativa para gerar o sinal de trade"""
+    historico = obter_dados_mercado(ticker)
+    
+    # CORREÇÃO AQUI: Chamada limpa da função
+    media_curta, media_longa = calcular_indicadores(historico)
+    ultimo_preco = historico[-1]
+    
+    print(f"📊 Último Preço: R$ {ultimo_preco:.2f} | Média Curta: R$ {media_curta:.2f} | Média Longa: R$ {media_longa:.2f}")
+    
+    # Regra de Cruzamento de Médias (Golden Cross / Death Cross simplificado)
+    if media_curta > media_longa:
+        sinal = "📈 COMPRA: Tendência de Alta confirmada por indicadores quantitativos."
+    elif media_curta < media_longa:
+        sinal = "📉 VENDA: Indicadores apontam perda de força e possível queda."
+    else:
+        sinal = "⏳ AGUARDAR: Mercado lateralizado, sem tendência clara definida."
         
-        # Extração correta utilizando chaves e índices válidos
-        texto_ia = dados['candidates'][0]['content']['parts'][0]['text']
-        return texto_ia
-    except Exception as e:
-        return f"Aviso técnico: IA retornou formato inesperado. Log interno: {e}"
+    return sinal
 
-for empresa in empresas_alvo:
-    url = f"https://{empresa}"
-    print(f"\n[ Mapeando Borda ] {url}...")
-    try:
-        resposta = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=7)
-        response_headers = resposta.headers
-        
-        # Identificação de melhorias de Infraestrutura e Conformidade
-        mejorias_necessarias = []
-        if "Content-Security-Policy" not in response_headers:
-            mejorias_necessarias.append("Content-Security-Policy (CSP)")
-        if "X-Frame-Options" not in response_headers:
-            mejorias_necessarias.append("X-Frame-Options (Proteção de Interface)")
-        if "X-Content-Type-Options" not in response_headers:
-            mejorias_necessarias.append("X-Content-Type-Options (MIME Guard)")
-        if "Strict-Transport-Security" not in response_headers:
-            mejorias_necessarias.append("Strict-Transport-Security (HSTS)")
-            
-        if mejorias_necessarias:
-            print(f" -> [INFO] {empresa} aceita {len(mejorias_necessarias)} otimizações! Consultando Gemini...")
-            for item in mejorias_necessarias:
-                analise_da_ia = pedir_analise_ia(empresa, item)
-                
-                # Montagem linear e alinhamento em 16 espaços exatos
-                mensagem_final = f"🧠 *CONSULTORIA DE IA: HUNTERBOT & GEMINI*\n\n⚠️ *Alvo:* {empresa}\n❌ *Otimização:* {item}\n\n🛡️ *Parecer Técnico da IA:*\n{analise_da_ia}"
-                
-                # Envio e pausas do loop interno
-                requests.post(url_telegram, data={"chat_id": CHAT_ID_TELEGRAM, "text": mensagem_final, "parse_mode": "Markdown"}, timeout=5)
-                time.sleep(1)
-            print(f"[+] Análise de {empresa} concluída.")
-    except Exception as e:
-        print(f"[-] Erro ao processar o alvo {empresa}: {e}")
-    time.sleep(3)
+# Loop Principal de Varredura de Ativos
+ativos_alvo = ["BOVA11", "IVVB11", "SMAL11"]
 
-print("\n--- 🌟 VARREDURA COM INTELIGÊNCIA ARTIFICIAL FINALIZADA! ---")
+for ativo in ativos_alvo:
+    print("-" * 50)
+    resultado_sinal = executar_estrategia(ativo)
+    print(f"🚨 SINAL DO BOT PARA {ativo}: {resultado_sinal}")
+    time.sleep(2)
+
+print("\n--- 🌟 ANÁLISE QUANTITATIVA FINALIZADA COM SUCESSO ---")
